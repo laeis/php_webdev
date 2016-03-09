@@ -1,0 +1,108 @@
+body {
+  padding-top: 50px;
+}
+.starter-template {
+  padding: 40px 15px;
+  text-align: center;
+}
+ul,
+ul ul{
+	list-style-type: none;
+}
+
+.form-group-extarea{
+	width: 70%;
+}
+.form-group-extarea textarea{
+	width: 100% !important;
+}
+.float-right{
+	float: right;
+}
+.float-left{
+	float: left;
+}
+
+.clear-both{
+	clear: both;
+}
+.clear-both:after{
+	content:'.';
+	width: 0;
+	height: 0;
+	display: block;
+	visibility: hidden;
+	clear: both;
+}
+.clear-both-hidden{
+	overflow: hidden;
+}
+.section-messages{
+	position: relative;
+}
+.container_scroll{
+	padding: 40px 15px;
+	border: 1px solid black;
+	position: relative;
+}
+.message-content{
+	border-radius: 0.5em;
+	background-color: #f2f2f2;
+	margin-bottom: 1em;
+	padding: 0.5em 1em 0.5em 1.5em;
+}
+.message-body{
+	position: relative;
+}
+.a-triangle-bottom:not(.collapsed) .glyphicon-triangle-bottom:before{
+	content: "\e250";
+}
+
+.message-date,
+.glyphicon{
+	margin: auto 10px;
+}
+
+.message-text{
+	display: inline;
+}
+.text-right{
+	text-align: right;
+}
+.text-left{
+	text-align: left;
+}
+.message-has-pearent{}
+
+.pagination{
+	padding: 40px 15px;
+	text-align: center;
+	display: block;
+}
+.bottom-section{
+	height: 200px;
+}
+.display-all-block{
+	position: fixed;
+	bottom: 100px;
+	right:20px;
+}
+
+.resume-status-block{
+	float: right;
+}
+.resume-status-block span{
+	margin: 0 0.5em;
+}
+.resume-status-block span a{
+	text-decoration: none; 
+}
+.resume-status-text-block{
+	float: left;
+}
+.active_status i.fa{
+	color: #3c763d;
+}
+ i.fa{
+	color: #000;
+}
