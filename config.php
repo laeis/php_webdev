@@ -11,7 +11,7 @@ define( 'DB_NAME', 'test_webdev_base' );
 
 /* define for DEBUG option */
 /* Change this to true to enable the display of notices during development.*/
-define( "DEBUG", true );
+define( "DEBUG", false );
 
 /* for create demo messages */
 /* Change this to true to reate demo messages */

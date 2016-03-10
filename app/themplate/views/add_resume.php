@@ -45,7 +45,7 @@
         <div class="form-group">
           <div class="col-sm-offset-2 col-sm-10">
             <input type="hidden" name="add-resume" value="1">
-            <button type="submit" class="btn btn-default btn-lg btn-block">Добавить</button>
+            <button type="submit" name="resume-form-submit" class="btn btn-default btn-lg btn-block">Добавить</button>
           </div>
         </div>
       </form>

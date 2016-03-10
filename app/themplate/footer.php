@@ -8,8 +8,6 @@
     <script src="/lib/bootstrap/js/bootstrap.min.js"></script>
     <script src="http://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
     <script type="text/javascript" src="https://cdn.datatables.net/t/dt/dt-1.10.11/datatables.min.js"></script>
-
-
     <script type="text/javascript" src="/js/scripts.js"></script>
   </body>
 </html>

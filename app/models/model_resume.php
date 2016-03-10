@@ -2,7 +2,7 @@
 class Model_Resume extends Model implements Resume{
 
 	protected $mysqli;
-	private $sym_query = "{?}";
+	
 
 	public function __construct() {
 			$this->mysqli = Model::getDB()->mysqli;	
@@ -18,7 +18,12 @@ class Model_Resume extends Model implements Resume{
 	}
 
 	function returnResume(){
-		$sql = "SELECT  `resume_id`, `resume_name`, `resume_date`, `resume_status`, `resume_file_name`, `status_type` FROM `Resume`, `Status_resume` WHERE Resume.resume_status = Status_resume.status_id";
+
+	/*	Select COUNT() as `review_count` FROM `Review_resume`, `Resume` WHERE Review_resume.review_resume_id = Resume.resume_id */
+
+	/*SELECT `resume_id`, `resume_name`, `resume_date`, `resume_status`, `resume_file_name`, `status_type`, ( Select COUNT(*) FROM `Review_resume`, `Resume` WHERE Review_resume.review_resume_id = Resume.resume_id )as `review_count` FROM `Resume`, `Status_resume` WHERE Resume.resume_status = Status_resume.status_id */
+
+		$sql = "SELECT `resume_id`, `resume_name`, `resume_date`, `resume_status`, `resume_file_name`, `status_type` FROM `Resume` LEFT JOIN `Status_resume` ON Resume.resume_status = Status_resume.status_id ";
 		$result_set = $this->mysqli->query( $sql );
 
 		if ( 0 == $result_set->num_rows ){
@@ -36,23 +41,6 @@ class Model_Resume extends Model implements Resume{
 		return $this->resultSetToArray( $result_set ); 
 	}
 
-	private function getQuery($query, $params) {
-		if ( !empty( $params ) ) {
-			for ( $i = 0; $i < count($params); $i++ ) {
-				$pos = strpos( $query, $this->sym_query );
-				$arg = "'".$this->mysqli->real_escape_string( $params[$i] )."'";
-				$query = substr_replace( $query, $arg, $pos, strlen( $this->sym_query ) );
-			}
-		}
-		return $query;
-	}
-	/* Преобразование result_set в двумерный массив */
-	private function resultSetToArray( $result_set ) {
-		$array = array();
-		while ( ($row = $result_set->fetch_assoc() ) != false) {
-		  $array[] = $row;
-		}
-		return $array;
-	}
+
 
 }

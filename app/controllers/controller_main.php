@@ -28,6 +28,19 @@ class Controller_Main extends Controller {
 		
 
 	}
+	public function action_save_review_form(){
+		$review_author = !empty( $_POST['author_review_name'] ) ? htmlspecialchars( trim( $_POST[ 'author_review_name'] ) ): '' ;
+		$review_text = !empty( $_POST['review_text'] ) ? htmlspecialchars( trim( $_POST[ 'review_text'] ) ) : '' ;
+		$review_resume_id = !empty( $_POST['review_resume_id'] ) ?  intval( $_POST[ 'review_resume_id'] ) : '';
+		if( empty( $review_resume_id ) ||  empty( $review_text ) || empty( $review_author ) ){
+			return false;
+		}
+		$result = $this->model_review->addViews( $review_text, $review_author, $review_resume_id );
+		if( ! empty( $result ) ) {
+			echo json_encode( $this->model_review->returnLastViews( $result ) );
+		}
+
+	}
 
 	public function action_get_add_resume() {
 		/* function for oauth with fb*/
@@ -40,6 +53,20 @@ class Controller_Main extends Controller {
 			echo $this->view->update_content( 'get_resumes.php', $data );
 		}
 
+	}
+	public function action_get_review_form(){
+		if( isset( $_POST['action'] ) ){
+			$data = array();
+			$review_id = !empty( $_POST['action_review'] ) ? intval( $_POST['action_review'] ) : '';
+			$data = $this->get_data_for_review( $review_id );
+			if( !empty( $review_id ) ){
+				$response['reviews'] = $this->view->update_content( 'get_review_content.php', false );
+				$response['form'] = $this->view->update_content( 'add_review.php', $review_id );
+				echo json_encode( $response );
+			}	
+		} else {
+			return false;
+		}
 	}
 
 	public function add_resume(){	
@@ -94,6 +121,10 @@ class Controller_Main extends Controller {
 			return false;
 		}
 
+	}
+
+	private function get_data_for_review(){
+		$data = array(); 
 	}
 
 	public function get_views( $get_views, $data = false ) {

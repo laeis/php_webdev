@@ -1,3 +1,7 @@
+<?php
+/**
+template with table for html List View summary
+**/?>
 
 <div id="get-resumes" >
 	<div class="row">
@@ -45,7 +49,13 @@
 						</td>
 
 						<td><a href="<?php echo 'http://' . UPLOAD_URL . $value['resume_file_name']; ?>"><?php echo $value['resume_file_name']; ?></a></td>
-						<td></td>
+						<td>
+							? Отзывов
+							<!-- Button trigger modal -->
+							<span class="btn btn-primary btn-xs" data-resume-id="<?php echo $value['resume_id'] ?>" data-action="get_review_form" data-toggle="modal" data-target="#myModal">
+							  Посмотреть
+							</span>
+						</td>
 					</tr>
 			<?php } ?>
 			</tbody>
@@ -53,3 +63,4 @@
 		</div>
 	</div>
 </div>
+<?php require_once 'get_reviews.php' ?>

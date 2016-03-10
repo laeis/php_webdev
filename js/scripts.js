@@ -26,10 +26,9 @@
 			} )
 		})
 		
-		app.on( "click",  "button[name='add-resume']", function (e) {
+		app.on( "click",  "button[name='resume-form-submit']", function (e) {
 			e.preventDefault();	
 			$( 'input' ).each( function( i, elem ){
-				console.log( $( elem ).val(), $( elem ) );
 				if( $( elem ).val().length == 0 ){
 					$( elem ).parents( 'div.form-group' ).addClass( 'has-warning' );	
 				} else {
@@ -42,6 +41,29 @@
 
 		} )
 		
+
+		app.on( "click",  "span[ data-toggle='modal']", function (e) {
+			e.preventDefault();
+			var currentElement = $( this );
+			var review_id  = $( this ).attr( 'data-resume-id' );
+			var controllerAction = $( this ).attr( 'data-action' ); 	
+			$.ajax( {
+				//dataType: "json",
+				url: "/main/"+ controllerAction,
+				type: "post",
+				data: { action: controllerAction, action_review: review_id },
+				success: function( response ){
+					response = $.parseJSON( response )
+					console.log( typeof( response ) );
+					app.find( '#reviews_section').html( response.reviews );
+					app.find( '#review_form_section').html( response.form );
+
+				},
+				error:function(){
+					$(".container_scroll").append('Error Occurred while fetching data.');
+				}
+			} )
+		} )
 			
 
 	})
@@ -67,5 +89,23 @@ function tableInitialization( id ){
 				}	
 			};
 		$( id ).dataTable( default_options );
+	} )( jQuery );
+}
+
+function sendReview() {
+	( function( $ ) {
+		var msg   = $('#add_review_form').serialize();
+		$.ajax({
+			type: 'POST',
+			url: "/main/save_review_form",
+			data: msg,
+			success: function( response ) {
+				response = $.parseJSON( response )
+				$( '#reviews_section' ).text( response );	
+			},
+			error:  function(xhr, str){
+				alert('Возникла ошибка: ' + xhr.responseCode);
+			}
+		});
 	} )( jQuery );
 }

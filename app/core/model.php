@@ -3,8 +3,11 @@
 class Model {
 
 	private static $db = null;
-	protected $mysqli = null;
 	
+	protected $mysqli = null;
+
+	protected $sym_query = "{?}";
+
 	private function __construct() {
 		$this->mysqli =  new mysqli( DB_HOST, DB_USER, DB_PASSWORD, DB_NAME );
 		/* check conection */
@@ -63,7 +66,25 @@ class Model {
 
 	}
 
-	
+	protected function getQuery($query, $params) {
+		if ( !empty( $params ) ) {
+			for ( $i = 0; $i < count($params); $i++ ) {
+				$pos = strpos( $query, $this->sym_query );
+				$arg = "'".$this->mysqli->real_escape_string( $params[$i] )."'";
+				$query = substr_replace( $query, $arg, $pos, strlen( $this->sym_query ) );
+			}
+		}
+		return $query;
+	}
+	/* Преобразование result_set в двумерный массив */
+	protected function resultSetToArray( $result_set ) {
+		$array = array();
+		while ( ($row = $result_set->fetch_assoc() ) != false) {
+		  $array[] = $row;
+		}
+		return $array;
+	}
+
 	public static function getDB() {
 		if ( self::$db == null ) {
 			self::$db = new self;
