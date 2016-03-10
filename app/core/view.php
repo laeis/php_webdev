@@ -29,7 +29,6 @@ class View {
 			extract( $data );
 		}
 		ob_start();
-		
 			include_once 'app/themplate/views/'.$content_view;
 		$test = ob_get_clean();
 		return $test;

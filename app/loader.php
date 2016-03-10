@@ -1,5 +1,5 @@
 <?php
-require_once "/../config.php";
+require_once "config.php";
 
 if( DEBUG == true ){
 	ini_set('display_errors', 'on'); 

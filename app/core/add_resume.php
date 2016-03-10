@@ -1,4 +1,4 @@
-<?php  var_dump($_POST , $_FILES);?>
+
 <div id="add-resume" >
   <form class="form-horizontal" action="/" method="POST" enctype="multipart/form-data">
     <div class="form-group">

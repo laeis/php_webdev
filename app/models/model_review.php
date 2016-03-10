@@ -8,7 +8,7 @@ class Model_Review extends Model {
 	}
 
 	function returnLastViews( $id ){
-		$sql = "SELECT `review_id`, `review_date`, `review_text`, `review_author`, `review_resume_id` FROM `Review_resume` WHERE  `review_id` = {?}";
+		$sql = "SELECT `review_id`, `review_date`, `review_author`, `review_text`, `review_resume_id`, `resume_name` FROM `Review_resume` LEFT JOIN `Resume` ON Resume.resume_id =  Review_resume.review_resume_id WHERE `review_id` = {?}";
 		$sql = $this->getQuery( $sql, array( $id ) );
 		$result_set = $this->mysqli->query( $sql );
 		if ( 0 == $result_set->num_rows ){
@@ -18,7 +18,7 @@ class Model_Review extends Model {
 	}
 
 	function returnAllViews( $id ){
-		$sql = "SELECT `review_id`, `review_date`, `review_text`, `review_author`, `review_resume_id` FROM `Review_resume` WHERE  `review_resume_id` = {?}";
+		$sql = "SELECT `review_id`, `review_date`, `review_author`, `review_text`,  `review_resume_id`, `resume_name` FROM `Review_resume` LEFT JOIN `Resume` ON Resume.resume_id =  Review_resume.review_resume_id WHERE  `review_resume_id` = {?} ORDER BY `review_date` DESC";
 		$sql = $this->getQuery( $sql, array( $id ) );
 		$result_set = $this->mysqli->query( $sql );
 		if ( 0 == $result_set->num_rows ){

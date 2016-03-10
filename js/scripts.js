@@ -55,7 +55,7 @@
 				success: function( response ){
 					response = $.parseJSON( response )
 					console.log( typeof( response ) );
-					app.find( '#reviews_section').html( response.reviews );
+					app.find( '#reviews_section ul').html( response.reviews );
 					app.find( '#review_form_section').html( response.form );
 
 				},
@@ -64,7 +64,33 @@
 				}
 			} )
 		} )
-			
+		
+		app.on( "click", '.status_link', function (e) {
+			e.preventDefault();
+			var currentElement = $( this );
+			var newStatusText = $( this ).attr( 'title' );
+			var parentElement = $( this ).parents('.resume-status-block');
+			var resumeId  = $( this ).attr( 'data-resume-id' );
+			var controllerAction = $( this ).attr( 'data-action' );
+			var newStatusResume = $( this ).attr( 'data-resume-status' );  	
+			$.ajax( {
+				//dataType: "json",
+				url: "/main/"+ controllerAction,
+				type: "post",
+				data: { action: controllerAction, resume: resumeId, status: newStatusResume },
+				success: function( response ){
+					if( response ){
+						parentElement.find( ".status_icon" ).removeClass( 'active_status' );
+						currentElement.parent().addClass( 'active_status' );
+						currentElement.parents( 'td' ).find( '.resume-status-text-block' ).text(newStatusText );	
+					}
+
+				},
+				error:function(){
+					$(".container_scroll").append('Error Occurred while fetching data.');
+				}
+			} )
+		});
 
 	})
 } )( jQuery );
@@ -72,6 +98,7 @@
 function tableInitialization( id ){
 	( function( $ ) {
 		var default_options = {
+				"bSort": false,
 				"sPaginationType": "full_numbers",
 				"oLanguage": {
 					"sLengthMenu": "Отображено _MENU_ записей на страницу",
@@ -95,13 +122,16 @@ function tableInitialization( id ){
 function sendReview() {
 	( function( $ ) {
 		var msg   = $('#add_review_form').serialize();
+		var cnt_message = $('#add_review_form input[name="review_resume_id"]').val();
 		$.ajax({
 			type: 'POST',
 			url: "/main/save_review_form",
 			data: msg,
 			success: function( response ) {
-				response = $.parseJSON( response )
-				$( '#reviews_section' ).text( response );	
+				$( '#reviews_section ul' ).prepend( response );	
+				$( "#get-resumes #block_resume_" + cnt_message + " .review-cnt").text( function( index, value ){
+					return ++value;
+				} );
 			},
 			error:  function(xhr, str){
 				alert('Возникла ошибка: ' + xhr.responseCode);

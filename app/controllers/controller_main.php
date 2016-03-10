@@ -4,7 +4,7 @@ class Controller_Main extends Controller {
 	private $model_resume;
 	private $model_review;
 	public $error = array();
-
+	public $message = "Фаил загружен. Резюме успешно добавлено" ;	
 	private static $controller_main = null;
 
 	function __construct() {
@@ -19,7 +19,12 @@ class Controller_Main extends Controller {
 			return;
 		}else{
 			$data = $this->get_data_for_resume();
-			if( !empty( $data ) ){
+			if ( isset( $_GET['result'] ) && 'success' == $_GET['result'] ) {
+				$data['message'] = $this->message;
+			}
+			if( empty( $data) ){
+				$this->get_views( 'get_resumes.php' );
+			} else{
 				$this->get_views( 'get_resumes.php', $data );
 			}
 
@@ -37,7 +42,8 @@ class Controller_Main extends Controller {
 		}
 		$result = $this->model_review->addViews( $review_text, $review_author, $review_resume_id );
 		if( ! empty( $result ) ) {
-			echo json_encode( $this->model_review->returnLastViews( $result ) );
+			$data['reviews'] = $this->model_review->returnLastViews( $result );
+			echo $this->view->update_content( 'get_review_content.php', $data );
 		}
 
 	}
@@ -60,12 +66,27 @@ class Controller_Main extends Controller {
 			$review_id = !empty( $_POST['action_review'] ) ? intval( $_POST['action_review'] ) : '';
 			$data = $this->get_data_for_review( $review_id );
 			if( !empty( $review_id ) ){
-				$response['reviews'] = $this->view->update_content( 'get_review_content.php', false );
+				$response['reviews'] = $this->view->update_content( 'get_review_content.php', $data );
 				$response['form'] = $this->view->update_content( 'add_review.php', $review_id );
 				echo json_encode( $response );
 			}	
 		} else {
 			return false;
+		}
+	}
+
+	public function action_change_resume_status(){
+		if( isset( $_POST['action'] ) && 'change_resume_status' == $_POST['action'] ){
+			$resume_id = !empty( $_POST['resume'] ) ? intval( $_POST['resume'] ) : '';
+			$resume_status = !empty( $_POST['status'] ) ? intval( $_POST['status'] ) : '';
+			if( !empty( $resume_id ) && !empty( $resume_status ) ){
+				$result = $this->model_resume->updateStatusResume( $resume_status, $resume_id );
+			}
+			if( ! empty( $result ) ) {
+				echo $result;
+				exit();
+			}
+			exit();
 		}
 	}
 
@@ -104,8 +125,9 @@ class Controller_Main extends Controller {
 		}
 		$resume_file_name = iconv( "cp1251", "utf-8", $resume_file_name );
 		$result = $this->model_resume->addResume(  $resume_name, $resume_date, $resume_status, $resume_file_name, $resume_file );
-		if ( empty( $error ) && ! empty( $result ) ){
-			echo $this->get_views( 'add_resume_succes.php', $message );
+
+		if ( empty( $error ) &&  ! empty( $result ) ){
+			header("Location: /?result=success" );
 			return;
 		}
 
@@ -123,11 +145,17 @@ class Controller_Main extends Controller {
 
 	}
 
-	private function get_data_for_review(){
+	private function get_data_for_review( $review_id ){
 		$data = array(); 
+		$data['reviews'] = $this->model_review->returnAllViews( $review_id );
+		if( !empty( $data ) ) {
+			return $data;
+		} else {
+			return false;
+		}
 	}
 
-	public function get_views( $get_views, $data = false ) {
+	public function get_views( $get_views = false, $data = false ) {
 		/* function for oauth with fb*/	
 		$this->view->generate( 'header.php' );
 		$this->view->generate( 'content.php',  $get_views, $data );

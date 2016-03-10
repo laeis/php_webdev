@@ -39,7 +39,6 @@
         </div>
       </div>
     </nav>
-    <?php var_dump($_POST); ?> 
 
 
 

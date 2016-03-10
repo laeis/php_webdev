@@ -41,7 +41,7 @@ class Model {
 			$sql = "CREATE TABLE IF NOT EXISTS `Resume` (
 						`resume_id` mediumint(11) NOT NULL AUTO_INCREMENT,
 						`resume_name` varchar(150) NOT NULL,
-						`resume_date` DATE NOT NULL DEFAULT CURRENT_TIMESTAMP,
+						`resume_date` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
 						`resume_status` TINYINT NOT NULL,
 						`resume_file_name` varchar(150) NOT NULL,
 						`resume_file` BLOB NOT NULL,
@@ -56,7 +56,7 @@ class Model {
 						`review_id` MEDIUMINT NOT NULL AUTO_INCREMENT,
 						`review_date` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
 						`review_text` varchar( 50 ) NOT NULL,
-						`review_author` MEDIUMINT NOT NULL,
+						`review_author` varchar( 50 ) NOT NULL,
 						`review_resume_id` MEDIUMINT NOT NULL,
 						PRIMARY KEY  ( `review_id` ),
 						FOREIGN KEY ( `review_resume_id` ) REFERENCES Resume( `resume_id` )

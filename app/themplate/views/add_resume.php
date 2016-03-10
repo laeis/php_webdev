@@ -1,4 +1,4 @@
-<?php  var_dump($_POST , $_FILES);?>
+
 <div id="add-resume" >
   <div class="row">
     <div class="col-xs-12 col-md-12 clear-both">

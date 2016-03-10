@@ -87,7 +87,12 @@ ul ul{
 	bottom: 100px;
 	right:20px;
 }
-
+.float-right{
+	float: right;
+}
+.float-left{
+	float: left;
+}
 .resume-status-block{
 	float: right;
 }
@@ -105,4 +110,16 @@ ul ul{
 }
  i.fa{
 	color: #000;
+}
+.review-cnt{
+	width: 3em;
+	display: inline-block;
+	margin-left: 1em;
+}
+.review-cnt.new{
+	background-color: #faebcc;
+	color: #8a6d3b;
+}
+.form-review-collapse-link{
+	margin-bottom: 1em;
 }

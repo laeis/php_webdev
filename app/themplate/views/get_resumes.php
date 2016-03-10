@@ -2,6 +2,11 @@
 /**
 template with table for html List View summary
 **/?>
+<?php if ( isset( $message ) ){ ?>
+	<div class="alert alert-success" role="alert">
+		<?php echo $message; ?>
+	</div>
+<?php } ?>
 
 <div id="get-resumes" >
 	<div class="row">
@@ -18,7 +23,7 @@ template with table for html List View summary
 			</thead>
 			<tbody>
 			<?php foreach( $resume as $value ){ ?>
-					<tr>
+					<tr id="block_resume_<?php echo $value['resume_id'];?>">
 						<td><?php echo $value['resume_name']; ?></td>
 						<td><?php echo $value['resume_date']; ?> </td>
 						<td>
@@ -27,17 +32,17 @@ template with table for html List View summary
 							</div> 
 							<div class="resume-status-block" >
 								<?php foreach( $resume_status as $status_value ){ ?>
-									<span id="resume_status_<?php echo $status_value["status_id"]?>" data-resume-status="<?php echo $status_value["status_id"]?>" class="<?php echo ( $value['status_type'] == $status_value['status_type'] ) ? 'active_status' : '' ; ?>">
-										<a href="" title="<?php echo $status_value['status_type'] ?>">
+									<span id="resume_<?php echo $value['resume_id'];?>_status_<?php echo $status_value["status_id"]?>" class="<?php echo ( $value['status_type'] == $status_value['status_type'] ) ? 'active_status' : '' ; ?> status_icon">
+										<a data-action="change_resume_status" class="status_link" href="#" title="<?php echo $status_value['status_type'] ?>" data-resume-status="<?php echo $status_value["status_id"]?>"  data-resume-id="<?php echo $value["resume_id"]?>" >
 										<?php switch ( $status_value["status_id"] ) {
 											case '1':
 												echo '<i class="fa fa-clock-o"></i>';
 												break;
 											case '2':
-												echo '<i class="fa fa-thumbs-up"></i>';
+												echo '<i class="fa fa-thumbs-down"></i>';
 												break;
 											case '3':
-												echo '<i class="fa fa-thumbs-down"></i>';
+												echo '<i class="fa fa-thumbs-up"></i>';
 												break;
 											default:
 												break;
@@ -50,10 +55,11 @@ template with table for html List View summary
 
 						<td><a href="<?php echo 'http://' . UPLOAD_URL . $value['resume_file_name']; ?>"><?php echo $value['resume_file_name']; ?></a></td>
 						<td>
-							? Отзывов
-							<!-- Button trigger modal -->
-							<span class="btn btn-primary btn-xs" data-resume-id="<?php echo $value['resume_id'] ?>" data-action="get_review_form" data-toggle="modal" data-target="#myModal">
-							  Посмотреть
+							<span class="review-read  btn btn-primary btn-xs" data-resume-id="<?php echo $value['resume_id'] ?>" data-action="get_review_form" data-toggle="modal" data-target="#myModal">
+						  		Посмотреть отзывы
+						  		<span class="badge review-cnt">
+						  				<?php echo !empty( $value['cnt_review'] ) ? $value['cnt_review'] : '0' ?>
+						  		</span>
 							</span>
 						</td>
 					</tr>

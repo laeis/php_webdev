@@ -11,16 +11,16 @@ class Core {
 			$class_name = strtolower( $class_name );
 			if ( false !== strripos( $class_name, $this->controllers ) ) {
 				if( file_exists( "app/controllers/" .$class_name . '.php' ) ){
-					include_once "/../controllers/" . $class_name . '.php';
+					include_once "app/controllers/" . $class_name . '.php';
 				} else {
 					//$this->error_page404();
 				}
 			} else if( false !== strripos( $class_name, $this->models ) ) {
 				if( file_exists( "app/models/" .$class_name . '.php' ) ){
-					include_once "/../models/" . $class_name . '.php';
+					include_once "app/models/" . $class_name . '.php';
 				} 
 			} else{
-    			include "/../interface/" . $class_name . '.php';
+    			include "app/interface/" . $class_name . '.php';
     		}
 		} );
 	}
