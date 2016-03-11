@@ -1,5 +1,5 @@
 <?php
-class Model_Resume extends Model implements Resume{
+class Model_Resume extends Model implements Interface_Resume{
 
 	protected $mysqli;
 	

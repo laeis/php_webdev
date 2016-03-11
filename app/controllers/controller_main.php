@@ -19,20 +19,15 @@ class Controller_Main extends Controller {
 			return;
 		}else{
 			$data = $this->get_data_for_resume();
-			if ( isset( $_GET['result'] ) && 'success' == $_GET['result'] ) {
-				$data['message'] = $this->message;
-			}
 			if( empty( $data) ){
-				$this->get_views( 'get_resumes.php' );
+				$this->get_views( 'content.php', 'get_resumes.php' );
 			} else{
-				$this->get_views( 'get_resumes.php', $data );
+				$this->get_views( 'content.php', 'get_resumes.php', $data );
 			}
-
+			
 		}
-		
-		
-
 	}
+
 	public function action_save_review_form(){
 		$review_author = !empty( $_POST['author_review_name'] ) ? htmlspecialchars( trim( $_POST[ 'author_review_name'] ) ): '' ;
 		$review_text = !empty( $_POST['review_text'] ) ? htmlspecialchars( trim( $_POST[ 'review_text'] ) ) : '' ;
@@ -49,10 +44,9 @@ class Controller_Main extends Controller {
 	}
 
 	public function action_get_add_resume() {
-		/* function for oauth with fb*/
 		echo $this->view->update_content( 'add_resume.php' );
-
 	}
+
 	public function action_get_all_resume() {
 		$data = $this->get_data_for_resume();
 		if( !empty( $data ) ){
@@ -90,6 +84,10 @@ class Controller_Main extends Controller {
 		}
 	}
 
+	public function action_update_review_cnt(){
+
+	}
+
 	public function add_resume(){	
 		$error = array();
 		$valid_ext = array( 'doc', 'docx', 'docm', 'rtf', 'odt', 'sxw', 'txt', 'pdf', 'tex', 'texi', 'wpd', 'xls', 'xlsx', 'xlsm', 'xlsx', 'sxc', 'csv' );
@@ -100,12 +98,13 @@ class Controller_Main extends Controller {
 		$old_file_name	= basename( $_FILES['resume_file']['name'] );
 		$ext =	substr( $old_file_name, 1 + strrpos( $old_file_name, '.' ) );
 		if( in_array( $ext, $valid_ext ) ) {
-			$resume_file_name = str_replace( " ", "_", iconv( "utf-8", "cp1251", $resume_name ) ). "_" . $resume_date . '.' . $ext;
+			$file_name = ( IS_WINDOWS ) ? iconv( "utf-8", "cp1251", $resume_name ) : $resume_name ;
+			$resume_file_name = str_replace( " ", "_", $file_name ). "_" . $resume_date . '.' . $ext;
 			if ( is_uploaded_file( $_FILES['resume_file']['tmp_name'] ) ) {
 				$upload_file_name = $upload_url . $resume_file_name;
+				var_dump($upload_file_name);
 				if ( move_uploaded_file( $_FILES['resume_file']['tmp_name'], $upload_file_name) ) {
 					$message[] = " Фаил загружен. "; 
-					
 				} else {
 					$error[] = "Ошибка, фаил не загружен.\n";
 				}
@@ -119,11 +118,12 @@ class Controller_Main extends Controller {
 		} else{
 			$error[] = "Ошибка, неправильный формат файла.\n";
 		}
+
 		if( empty( $resume_name ) || ! empty( $error ) ){
-			$this->get_views( 'add_resume.php', $error );
+			$this->get_views( 'content.php', 'add_resume.php', $error );
 			return;
 		}
-		$resume_file_name = iconv( "cp1251", "utf-8", $resume_file_name );
+		$resume_file_name = ( IS_WINDOWS ) ? iconv( "cp1251", "utf-8", $resume_file_name ) : $resume_file_name;
 		$result = $this->model_resume->addResume(  $resume_name, $resume_date, $resume_status, $resume_file_name, $resume_file );
 
 		if ( empty( $error ) &&  ! empty( $result ) ){
@@ -155,11 +155,5 @@ class Controller_Main extends Controller {
 		}
 	}
 
-	public function get_views( $get_views = false, $data = false ) {
-		/* function for oauth with fb*/	
-		$this->view->generate( 'header.php' );
-		$this->view->generate( 'content.php',  $get_views, $data );
-		$this->view->generate( 'footer.php' );
 
-	}
 }

@@ -2,9 +2,21 @@
 	$(document).ready( function(){
 
 		var app = $( '#app-area' );
+		var review_cnt  = 0;
+		/* init table sortable */
 		if( app.find( '#example' ).length > 0 ){
 			tableInitialization( '#example' );
 		}
+
+		/*setInterval( function(){
+			if( $( '#app-area' ).find( '#get-resumes' ).length > 0 ){
+				get_review_cnt() 
+					console.log( review_cnt );
+		
+			}
+		}, 3000 ); */
+	
+		/*  Switching between the table and the form of resume  */
 		$('.nav-pills li').click(function (e) {
 			e.preventDefault();
 			var currentElement = $( this );
@@ -26,6 +38,7 @@
 			} )
 		})
 		
+		/* check fields on resume form  */
 		app.on( "click",  "button[name='resume-form-submit']", function (e) {
 			e.preventDefault();	
 			$( 'input' ).each( function( i, elem ){
@@ -41,7 +54,7 @@
 
 		} )
 		
-
+		/* for create modal window with resume review and form for add new review */
 		app.on( "click",  "span[ data-toggle='modal']", function (e) {
 			e.preventDefault();
 			var currentElement = $( this );
@@ -63,8 +76,9 @@
 					$(".container_scroll").append('Error Occurred while fetching data.');
 				}
 			} )
-		} )
-		
+		} );
+
+		/* for change status on table use status icon*/
 		app.on( "click", '.status_link', function (e) {
 			e.preventDefault();
 			var currentElement = $( this );
@@ -95,11 +109,14 @@
 	})
 } )( jQuery );
 
+
 function tableInitialization( id ){
 	( function( $ ) {
 		var default_options = {
-				"bSort": false,
+				/* Disable initial sort */
+				"order": [],
 				"sPaginationType": "full_numbers",
+				/*  localization  */
 				"oLanguage": {
 					"sLengthMenu": "Отображено _MENU_ записей на страницу",
 					"sSearch": "Поиск:",
@@ -119,6 +136,7 @@ function tableInitialization( id ){
 	} )( jQuery );
 }
 
+/* for ajax submint for with new review */
 function sendReview() {
 	( function( $ ) {
 		var msg   = $('#add_review_form').serialize();
@@ -128,7 +146,8 @@ function sendReview() {
 			url: "/main/save_review_form",
 			data: msg,
 			success: function( response ) {
-				$( '#reviews_section ul' ).prepend( response );	
+				$( '#reviews_section ul' ).prepend( response );
+				$( '#reviews_section ul' ).find( '.review-impty-block' ).remove();	
 				$( "#get-resumes #block_resume_" + cnt_message + " .review-cnt").text( function( index, value ){
 					return ++value;
 				} );
@@ -139,3 +158,44 @@ function sendReview() {
 		});
 	} )( jQuery );
 }
+
+function updateReviewCnt() {
+	( function( $ ) {
+		$.ajax({
+			type: 'POST',
+			url: "/main/update_review_cnt",
+			data: msg,
+			success: function( response ) {
+				$( '#reviews_section ul' ).prepend( response );
+				$( '#reviews_section ul' ).find( '.review-impty-block' ).remove();	
+				$( "#get-resumes #block_resume_" + cnt_message + " .review-cnt").text( function( index, value ){
+					return ++value;
+				} );
+			},
+			error:  function(xhr, str){
+				alert('Возникла ошибка: ' + xhr.responseCode);
+			}
+		});
+	} )( jQuery );
+}
+
+function get_review_cnt( cnt ){
+	( function( $ ) {
+		$.ajax({
+			type: 'POST',
+			url: "/counter",
+			data: { action: 'get-cnt' },
+			success: function( response ) {
+				response = $.parseJSON( response )
+				onCompleteFunction( response.review_cnt );
+			},
+			error:  function(xhr, str){
+				alert('Возникла ошибка: ' + xhr.responseCode);
+			}
+		});
+		function onCompleteFunction( response ) {
+   			return response;
+		}
+	} )( jQuery );
+}
+

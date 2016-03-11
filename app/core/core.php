@@ -3,6 +3,7 @@ class Core {
 	
 	private $controllers = 'Controller_';
 	private $models = 'Model_';
+	private $interface = 'Interface_';
 	private $themplate;
 	private static $core;
 
@@ -13,14 +14,18 @@ class Core {
 				if( file_exists( "app/controllers/" .$class_name . '.php' ) ){
 					include_once "app/controllers/" . $class_name . '.php';
 				} else {
-					//$this->error_page404();
+					$this->error_page404();
 				}
 			} else if( false !== strripos( $class_name, $this->models ) ) {
 				if( file_exists( "app/models/" .$class_name . '.php' ) ){
 					include_once "app/models/" . $class_name . '.php';
 				} 
-			} else{
-    			include "app/interface/" . $class_name . '.php';
+			} else if( false !== strripos( $class_name, $this->interface ) ) {
+				if( file_exists( "app/interface/" .$class_name . '.php' ) ){
+					include "app/interface/" . $class_name . '.php';
+				} 
+    		} else {
+    			include "app/classes/" . $class_name . '.php';
     		}
 		} );
 	}
@@ -66,7 +71,7 @@ class Core {
         $host = 'http://'.$_SERVER['HTTP_HOST'].'/';
         header('HTTP/1.1 404 Not Found');
 		header("Status: 404 Not Found");
-		header('Location: /' );
+		header('Location:' . $host . '404');
     }
 
 	public static function getInstance() {

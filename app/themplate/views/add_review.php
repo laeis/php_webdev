@@ -2,7 +2,7 @@
 /**
 themplate with form for add review
 **/?>
-<a class="btn btn-default btn-xs btn-block form-review-collapse-link" role="button" data-toggle="collapse" href="#collapseFormReview" aria-expanded="false" aria-controls="collapseFormReview">
+<a class="btn btn-info btn-xs btn-block form-review-collapse-link" role="button" data-toggle="collapse" href="#collapseFormReview" aria-expanded="false" aria-controls="collapseFormReview">
     Форма для отзыва <span class="caret"></span>
 </a>
 <div class="collapse" id="collapseFormReview">

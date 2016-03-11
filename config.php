@@ -21,6 +21,9 @@ define( "DEMO_UPLOAD", false );
 /* Specify the number of messages on a single page */
 define( "LIMIT", 15 );
 
-define( 'UPLOAD_DIR', $_SERVER['DOCUMENT_ROOT'] . '/upload/' );
+define( 'UPLOAD_DIR', $_SERVER['DOCUMENT_ROOT'] . 'upload/' );
 define( 'UPLOAD_URL', $_SERVER['SERVER_NAME'] . '/upload/' );
 define( 'DOCUMENT_ROOT', $_SERVER['DOCUMENT_ROOT'] );
+
+/*if your sistem is window define IS_WINDOWS need change to "true" */
+define( 'IS_WINDOWS' , false );

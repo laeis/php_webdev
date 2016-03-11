@@ -5,14 +5,14 @@
         <div class="panel-heading"> 
            <p>
                 <span>
-                    Отзыв от <?php echo $review['review_author']; ?>
+                    Отзыв от <b><?php echo $review['review_author']; ?></b>
                 </span> 
                 <span>
                     оставлен <?php echo $review["review_date"]; ?>
                 </span>
                 к резюме 
                 <span> 
-                    <?php echo $review['resume_name']; ?>
+                    <b><?php echo $review['resume_name']; ?></b>
                 </span>
                 
             </p>
@@ -26,4 +26,12 @@
     </li>
 
     <?php }
-} ?>
+} else { ?>
+   <li class="panel panel-warning review-impty-block">
+        <div class="panel-heading"> 
+            <p>
+                Пока нет ни одного отзыва.
+            </p>
+        </div>
+   </li>
+<?php } ?>
