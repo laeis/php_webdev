@@ -89,45 +89,55 @@ class Controller_Main extends Controller {
 	}
 
 	public function add_resume(){	
-		$error = array();
+		$message = array();
+		$message[ 'success' ] = $message[ 'error'] = "";
 		$valid_ext = array( 'doc', 'docx', 'docm', 'rtf', 'odt', 'sxw', 'txt', 'pdf', 'tex', 'texi', 'wpd', 'xls', 'xlsx', 'xlsm', 'xlsx', 'sxc', 'csv' );
 		$resume_name = ! empty( $_POST['resume_name'] ) ? trim( $_POST['resume_name'] ) : '' ;
 		$resume_date = ! empty( $_POST['resume_date'] ) ? trim( $_POST['resume_date'] ) : date('Y-m-d') ;
 		$resume_status = ! empty( $_POST['status_resume'] ) ? intval( trim( $_POST['status_resume'] ) ) : 1 ;
 		$upload_url = UPLOAD_DIR;
-		$old_file_name	= basename( $_FILES['resume_file']['name'] );
-		$ext =	substr( $old_file_name, 1 + strrpos( $old_file_name, '.' ) );
-		if( in_array( $ext, $valid_ext ) ) {
-			$file_name = ( IS_WINDOWS ) ? iconv( "utf-8", "cp1251", $resume_name ) : $resume_name ;
-			$resume_file_name = str_replace( " ", "_", $file_name ). "_" . $resume_date . '.' . $ext;
-			if ( is_uploaded_file( $_FILES['resume_file']['tmp_name'] ) ) {
-				$upload_file_name = $upload_url . $resume_file_name;
-				var_dump($upload_file_name);
-				if ( move_uploaded_file( $_FILES['resume_file']['tmp_name'], $upload_file_name) ) {
-					$message[] = " Фаил загружен. "; 
-				} else {
-					$error[] = "Ошибка, фаил не загружен.\n";
+		$old_file_name	= ! empty( $_FILES['resume_file']['name'] ) ?  basename( $_FILES['resume_file']['name'] ) : '' ;
+		$message[ 'error'] .= empty( $resume_name ) ? 'Укажите имя для резюме. ' : '' ;
+		$message[ 'error'] .= empty( $old_file_name ) ? 'Добавьте фаил для резюме. ' : '';
+		if( empty( $message[ 'error'] ) ){
+			$ext =	substr( $old_file_name, 1 + strrpos( $old_file_name, '.' ) );
+			if( in_array( $ext, $valid_ext ) ) {
+				$file_name = ( IS_WINDOWS ) ? iconv( "utf-8", "cp1251", $resume_name ) : $resume_name ;
+				$resume_file_name = str_replace( " ", "_", $file_name ). "_" . $resume_date . '.' . $ext;
+				if ( is_uploaded_file( $_FILES['resume_file']['tmp_name'] ) ) {
+					$upload_file_name = $upload_url . $resume_file_name;
+					if( file_exists( $upload_file_name ) ){
+						$index_file_name = 1;
+						while ( file_exists( $upload_file_name ) ){
+							$resume_file_name = str_replace( " ", "_", $file_name ). "_" . $resume_date . '_' . $index_file_name++ . '.' . $ext;
+							$upload_file_name = $upload_url . $resume_file_name;
+						}
+					}
+					if ( move_uploaded_file( $_FILES['resume_file']['tmp_name'], $upload_file_name) ) {
+						$message[ 'success' ] .= " Фаил загружен. "; 
+					} else {
+						$message[ 'error'] .= "Ошибка, фаил не загружен.\n";
+					}
+					if( empty( $error ) ){
+						$f = fopen( $upload_file_name,"rb"); 
+						$upload = fread ($f, filesize( $upload_file_name ) ); // считали файл в переменную
+						fclose($f); // закрыли файл, можно опустить
+						$resume_file = addslashes( $upload );
+					}
 				}
-				if( empty( $error ) ){
-					$f = fopen( $upload_file_name,"rb"); 
-					$upload = fread ($f, filesize( $upload_file_name ) ); // считали файл в переменную
-					fclose($f); // закрыли файл, можно опустить
-					$resume_file = addslashes( $upload );
-				}
-			}
-		} else{
-			$error[] = "Ошибка, неправильный формат файла.\n";
+			} else{
+				$message[ 'error'] .= " Ошибка, неправильный формат файла.\n ";
+			}	
 		}
-
-		if( empty( $resume_name ) || ! empty( $error ) ){
-			$this->get_views( 'content.php', 'add_resume.php', $error );
+		if( ! empty( $message[ 'error'] ) ) {
+			$this->get_views( 'content.php', 'add_resume.php', $message );
 			return;
 		}
 		$resume_file_name = ( IS_WINDOWS ) ? iconv( "cp1251", "utf-8", $resume_file_name ) : $resume_file_name;
 		$result = $this->model_resume->addResume(  $resume_name, $resume_date, $resume_status, $resume_file_name, $resume_file );
 
-		if ( empty( $error ) &&  ! empty( $result ) ){
-			header("Location: /?result=success" );
+		if ( empty( $message[ 'error'] ) &&  ! empty( $result ) ){
+			header( "Location: /?result=success" );
 			return;
 		}
 
@@ -137,6 +147,7 @@ class Controller_Main extends Controller {
 		$data = array(); 
 		$data['resume'] = $this->model_resume->returnResume();
 		$data['resume_status'] = $this->model_resume->returnResumeStatus();
+		$data['reviews_count'] = $this->model_review->returnViewsCnt();
 		if( !empty( $data['resume'] ) && !empty( $data['resume_status'] ) ) {
 			return $data;
 		} else {

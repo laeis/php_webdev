@@ -36,6 +36,15 @@ class Model_Review extends Model {
 		return $this->resultSetToArray( $result_set ); 
 	}
 
+	function returnViewEachCnt(){
+		$sql = "SELECT `review_resume_id`, count( `review_resume_id` ) as cnt_review FROM `Review_resume`  GROUP BY `review_resume_id`";
+		$result_set = $this->mysqli->query( $sql );
+		if ( 0 == $result_set->num_rows ){
+			return false;	
+		} 
+		return $this->resultSetToArray( $result_set ); 
+	}
+
 	function addViews( $review_text, $review_author, $review_resume_id ){
 		$sql = "INSERT INTO `Review_resume` ( `review_text`, `review_author`, `review_resume_id` ) VALUES ( {?}, {?}, {?} )";
 		$sql = $this->getQuery( $sql, array( $review_text, $review_author, $review_resume_id ) );

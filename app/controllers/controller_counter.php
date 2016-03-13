@@ -1,7 +1,7 @@
 <?php
 
 
-class Controller_Counter extends Controller {
+class Controller_Counter  extends Controller {
 
 	private $model_resume;
 	private $model_review;
@@ -13,14 +13,16 @@ class Controller_Counter extends Controller {
 	}
 
 	function action_index() {
-		$data = array(); 
-		if( isset( $_POST['action'] ) && 'get-cnt' == ( $_POST['action'] ) ){
-			$data = $this->model_review->returnViewsCnt();
-			if( !empty( $data['0'] ) ) {
-				echo  json_encode( $data['0'] );
-			}
-		}
+		$views_cnt =  $this->model_review->returnViewsCnt();
+		echo json_encode( $views_cnt[0] );
+	}
+
+	function countViews() {
 
 	}
 
+	function action_update_count() {
+		echo json_encode( $this->model_review->returnViewEachCnt() );
+	}
+	
 }

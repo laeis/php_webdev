@@ -13,7 +13,7 @@ class Model_Resume extends Model implements Interface_Resume{
 		$sql = $this->getQuery( $sql, array(  $resume_name, $resume_date, $resume_status, $resume_file_name, $resume_file) );
 		$success = $this->mysqli->query( $sql );
 		if ( !empty( $success ) )
-			return true;
+			return $this->mysqli->insert_id;
 
 	}
 

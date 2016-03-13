@@ -1,20 +1,23 @@
 ( function( $ ) {
 	$(document).ready( function(){
-
 		var app = $( '#app-area' );
 		var review_cnt  = 0;
+
 		/* init table sortable */
 		if( app.find( '#example' ).length > 0 ){
 			tableInitialization( '#example' );
 		}
+		if( $( '.container' ).find( '#add-resume' ).length > 0 ){
+			$( 'ul.nav-pills li').toggleClass( 'active' );
+		}
 
-		/*setInterval( function(){
+		get_review_cnt() ;
+
+		setInterval( function(){
 			if( $( '#app-area' ).find( '#get-resumes' ).length > 0 ){
 				get_review_cnt() 
-					console.log( review_cnt );
-		
 			}
-		}, 3000 ); */
+		}, 5000 );
 	
 		/*  Switching between the table and the form of resume  */
 		$('.nav-pills li').click(function (e) {
@@ -39,7 +42,7 @@
 		})
 		
 		/* check fields on resume form  */
-		app.on( "click",  "button[name='resume-form-submit']", function (e) {
+		/*app.on( "click",  "button[name='resume-form-submit']", function (e) {
 			e.preventDefault();	
 			$( 'input' ).each( function( i, elem ){
 				if( $( elem ).val().length == 0 ){
@@ -52,22 +55,24 @@
 				$( '#add-resume-form' ).submit();
 			
 
-		} )
+		} )*/
 		
 		/* for create modal window with resume review and form for add new review */
 		app.on( "click",  "span[ data-toggle='modal']", function (e) {
 			e.preventDefault();
 			var currentElement = $( this );
 			var review_id  = $( this ).attr( 'data-resume-id' );
-			var controllerAction = $( this ).attr( 'data-action' ); 	
+			var controllerAction = $( this ).attr( 'data-action' );
+			if( currentElement.children( '.new' ).length > 0 ){
+				currentElement.children( '.review-cnt' ).removeClass( 'new' );
+			} 	
 			$.ajax( {
 				//dataType: "json",
 				url: "/main/"+ controllerAction,
 				type: "post",
 				data: { action: controllerAction, action_review: review_id },
 				success: function( response ){
-					response = $.parseJSON( response )
-					console.log( typeof( response ) );
+					response = $.parseJSON( response );
 					app.find( '#reviews_section ul').html( response.reviews );
 					app.find( '#review_form_section').html( response.form );
 
@@ -105,6 +110,9 @@
 				}
 			} )
 		});
+
+
+
 
 	})
 } )( jQuery );
@@ -179,23 +187,55 @@ function updateReviewCnt() {
 	} )( jQuery );
 }
 
-function get_review_cnt( cnt ){
+function get_review_cnt( ){
 	( function( $ ) {
 		$.ajax({
 			type: 'POST',
 			url: "/counter",
 			data: { action: 'get-cnt' },
+			dataType: "json",
 			success: function( response ) {
-				response = $.parseJSON( response )
-				onCompleteFunction( response.review_cnt );
+				if( $( '#get-resumes' ).find( '#reviews-counter' ).text() != response.review_cnt ){
+					$( '#get-resumes' ).find( '#reviews-counter' ).text( response.review_cnt );
+					upadte_review_cnt( );
+
+				};	
 			},
 			error:  function(xhr, str){
 				alert('Возникла ошибка: ' + xhr.responseCode);
 			}
 		});
-		function onCompleteFunction( response ) {
-   			return response;
-		}
 	} )( jQuery );
 }
 
+function upadte_review_cnt( ){
+	( function( $ ) {
+		$.ajax({
+			type: 'POST',
+			url: "/counter/update_count",
+			data: { action: 'get-cnt' },
+			dataType: "json",
+			success: function( response ) {
+				/* var table = $('#example').DataTable();
+				var row; */
+				for (var key in response) {
+					var cnt_block = $( "#example #block_resume_" + response[key].review_resume_id + " .review-cnt" );
+
+					var old_cnt = cnt_block.text();
+					cnt_block.text( function(
+						 index, value ){
+						if( response[key].cnt_review != value ){
+							return  response[key].cnt_review;
+						}
+					} );
+					if(  old_cnt !=  $( "#block_resume_" + response[key].review_resume_id + " .review-cnt" ).text() ) {
+						cnt_block.addClass( 'new' );
+					}
+				}
+			},
+			error:  function(xhr, str){
+				alert('Возникла ошибка: ' + xhr.responseCode);
+			}
+		});
+	} )( jQuery );
+}

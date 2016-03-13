@@ -1,4 +1,9 @@
 <div class="container">
+    <noscript>
+      <div class="alert alert-danger" role="alert">
+        <p>Для коректной работы приложения включите JavaScript в вашем браузере</p>
+      </div>
+    </noscript>
 	<div class="starter-template section-form">
 		<div class="row">
 			<div class="col-xs-12 col-md-12 clear-both">

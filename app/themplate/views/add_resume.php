@@ -1,4 +1,10 @@
 
+<?php if( isset( $error ) ){ ?>
+  <div class="alert alert-warning" role="alert">
+      <p><?php echo $error; ?> </p>
+  </div>
+<?php } ?>
+
 <div id="add-resume" >
   <div class="row">
     <div class="col-xs-12 col-md-12 clear-both">
@@ -6,7 +12,7 @@
         <div class="form-group">
           <label for="inputname" class="col-sm-2 control-label">Имя</label>
           <div class="col-sm-10">
-            <input type="text" name="resume_name" class="form-control" id="inputname" placeholder="Имя">
+        <input type="text" value="<?php echo isset( $_POST['resume_name'] ) ? $_POST['resume_name'] : '' ;?>" name="resume_name" class="form-control" id="inputname" placeholder="Имя">
           </div>
         </div>
         <div class="form-group">

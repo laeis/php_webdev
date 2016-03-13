@@ -41,7 +41,7 @@ class Model {
 			$sql = "CREATE TABLE IF NOT EXISTS `Resume` (
 						`resume_id` mediumint(11) NOT NULL AUTO_INCREMENT,
 						`resume_name` varchar(150) NOT NULL,
-						`resume_date` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+						`resume_date` DATE,
 						`resume_status` TINYINT NOT NULL,
 						`resume_file_name` varchar(150) NOT NULL,
 						`resume_file` BLOB NOT NULL,

@@ -2,23 +2,22 @@
 /**
 template with table for html List View summary
 **/?>
-<?php if ( isset( $message ) ){ ?>
+<?php /*if ( isset( $_GET['result'] ) && 'success' == $_GET['result']){ ?>
 	<div class="alert alert-success" role="alert">
-		<?php echo $message; ?>
+		<p>Фаил загружен. Резюме успешно добавлено</p>
 	</div>
-<?php } ?>
-
+<?php } */ ?>
 <div id="get-resumes" >
 	<div class="row">
 		<div class="col-xs-12 col-md-12 clear-both">
 		<table id="example" class="table table-striped table-bordered" cellspacing="0" width="100%">
 			<thead>
 				<tr>
-					<th>Имя</th>
+					<th>Имя </th>
 					<th>Дата</th>
 					<th>Статус</th>
 					<th>Файл резюме</th>
-					<th>Отзывы</th>
+					<th>Отзывы <span id="reviews-counter" class="badge review-cnt"><?php echo $reviews_count[0]['review_cnt']; ?></span></th>
 				</tr>
 			</thead>
 			<tbody>
@@ -57,9 +56,7 @@ template with table for html List View summary
 						<td>
 							<span class="review-read  btn btn-primary btn-xs" data-resume-id="<?php echo $value['resume_id'] ?>" data-action="get_review_form" data-toggle="modal" data-target="#myModal">
 						  		Посмотреть отзывы
-						  		<span class="badge review-cnt">
-						  				<?php echo !empty( $value['cnt_review'] ) ? $value['cnt_review'] : '0' ?>
-						  		</span>
+						  		<span class="badge review-cnt"><?php echo !empty( $value['cnt_review'] ) ? $value['cnt_review'] : '0' ?></span>
 							</span>
 						</td>
 					</tr>

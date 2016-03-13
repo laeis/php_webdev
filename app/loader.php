@@ -16,4 +16,5 @@ require_once 'core/view.php';
 require_once 'core/controller.php';
 require_once 'core/core.php';
 
+
 $core = Core::getInstance(); 
